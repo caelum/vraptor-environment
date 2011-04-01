@@ -28,36 +28,34 @@ where environment_name is the current environment ('production' or 'development'
 
 Your environment_name.properties should be located at src/main/resources. Example ('development.properties'):
 
-_test_environment = true_
-
-_test_mail = test.mail@mail.com_
-
-_environment.controller = true_
+		test_environment = true
+		test_mail = test.mail@mail.com
+		environment.controller = true
 
 The 'environment.controller' key is reserved. If it's set to true you will have access to /admin/environment where you can view and edit your configurations.
 
 # accessing environment properties on java code
-
-import br.com.caelum.vraptor.environment.Environment;
-
-@Resource
-public class myController {
-	Environment environment;
-	MailSender sender;
-
-	public myController(Environment environment, MailSender sender) {
-		this.environment = environment;
-		this.sender = sender;
-	}
-	
-	public void sendMail(String email) {
-		if(environment.supports("test_environment")) {
-			sender.sendMailTo(environment.get("test_mail"));
-			return;
+		
+		import br.com.caelum.vraptor.environment.Environment;
+		
+		@Resource
+		public class myController {
+			Environment environment;
+			MailSender sender;
+		
+			public myController(Environment environment, MailSender sender) {
+				this.environment = environment;
+				this.sender = sender;
+			}
+			
+			public void sendMail(String email) {
+				if(environment.supports("test_environment")) {
+					sender.sendMailTo(environment.get("test_mail"));
+					return;
+				}
+				sender.sendMailTo(email);
+			}
 		}
-		sender.sendMailTo(email);
-	}
-}
 
 # accessing environment properties on jsp
 
