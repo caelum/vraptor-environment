@@ -34,7 +34,7 @@ public class EnvironmentController {
 	}
 	
 	private boolean isDisabled() {
-		return environment.supports("environment.controller");
+		return !environment.supports("environment.controller");
 	}
 
 	@Path("/admin/environment")
