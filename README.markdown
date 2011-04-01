@@ -29,7 +29,9 @@ where environment_name is the current environment ('production' or 'development'
 Your environment_name.properties should be located at src/main/resources. Example ('development.properties'):
 
 _test_environment = true
+
 test_mail = test.mail@mail.com
+
 environment.controller = true_
 
 The 'environment.controller' key is reserved. If it's set to true you will have access to /admin/environment where you can view and edit your configurations.
