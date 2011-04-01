@@ -1,0 +1,1 @@
+<%@ attribute name="key" type="java.lang.String" required="true" %><%= ((br.com.caelum.vraptor.environment.Environment)request.getAttribute("environment")).get(key) %>

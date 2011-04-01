@@ -1,0 +1,1 @@
+<%@ attribute name="key" type="java.lang.String" required="true" %><% if(((br.com.caelum.vraptor.environment.Environment)request.getAttribute("environment")).supports(key)) { %><jsp:doBody/><%}%>
