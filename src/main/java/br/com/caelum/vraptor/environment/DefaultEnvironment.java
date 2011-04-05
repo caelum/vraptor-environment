@@ -7,6 +7,9 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.ioc.Component;
 
@@ -22,7 +25,9 @@ import br.com.caelum.vraptor.ioc.Component;
 @ApplicationScoped
 @Component
 public class DefaultEnvironment implements Environment {
-
+	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(DefaultEnvironment.class);
 	private final Properties properties;
 	private String environment;
 
@@ -35,7 +40,12 @@ public class DefaultEnvironment implements Environment {
 		String name = "/" + environment + ".properties";
 		InputStream stream = DefaultEnvironment.class.getResourceAsStream(name);
 		this.properties = new Properties();
-		this.properties.load(stream);
+		if (stream != null) {
+			this.properties.load(stream);
+		} else {
+			LOG.warn("Could not find the file " + name
+					+ " to load. If you ask for any property, null will be returned");
+		}
 	}
 
 	public boolean supports(String feature) {
@@ -62,7 +72,8 @@ public class DefaultEnvironment implements Environment {
 
 	@Override
 	public URL getResource(String name) {
-		URL resource = DefaultEnvironment.class.getResource("/" + environment + name);
+		URL resource = DefaultEnvironment.class.getResource("/" + environment
+				+ name);
 		if (resource != null) {
 			return resource;
 		}
