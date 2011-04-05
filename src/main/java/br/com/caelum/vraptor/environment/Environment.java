@@ -1,16 +1,14 @@
 package br.com.caelum.vraptor.environment;
 
-
+import java.net.URL;
 
 /**
- * 
  * An environment has a set of key/value properties to be
  * used within your application
  * 
  * @author Alexandre Atoji
- *
+ * @author Guilherme Silveira
  */
-
 public interface Environment {
 
 	/** 
@@ -38,4 +36,9 @@ public interface Environment {
 	void set(String key, String value);
 
 	Iterable<String> getKeys();
+	
+	/**
+	 * Locates a resource according to your current environment.
+	 */
+	URL getResource(String name);
 }

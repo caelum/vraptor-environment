@@ -2,6 +2,7 @@ package br.com.caelum.vraptor.environment;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -10,8 +11,10 @@ import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.ioc.Component;
 
 /**
- * A default environment implementation which loads the environment file based on the br.com.caelum.vraptor.environment
- * property in the context init parameter.
+ * A default environment implementation which loads the environment file based
+ * on the br.com.caelum.vraptor.environment property in the context init
+ * parameter.
+ * 
  * @author Alexandre Atoji
  * @author Andrew Kurauchi
  * @author Guilherme Silveira
@@ -21,17 +24,20 @@ import br.com.caelum.vraptor.ioc.Component;
 public class DefaultEnvironment implements Environment {
 
 	private final Properties properties;
+	private String environment;
 
 	public DefaultEnvironment(ServletContext context) throws IOException {
-		String name = context.getInitParameter("br.com.caelum.vraptor.environment");
-		if (name == null || name.equals("")) {
-			name = "development";
+		this.environment = context
+				.getInitParameter("br.com.caelum.vraptor.environment");
+		if (environment == null || environment.equals("")) {
+			environment = "development";
 		}
-		InputStream stream = DefaultEnvironment.class.getResourceAsStream("/" + name+".properties");
+		String name = "/" + environment + ".properties";
+		InputStream stream = DefaultEnvironment.class.getResourceAsStream(name);
 		this.properties = new Properties();
 		this.properties.load(stream);
 	}
-	
+
 	public boolean supports(String feature) {
 		return Boolean.parseBoolean(properties.getProperty(feature, "false"));
 	}
@@ -52,6 +58,18 @@ public class DefaultEnvironment implements Environment {
 	@Override
 	public Iterable<String> getKeys() {
 		return (Iterable<String>) properties.stringPropertyNames();
+	}
+
+	@Override
+	public URL getResource(String name) {
+		int position = name.lastIndexOf('.');
+		String localName = name.substring(0, position) + "." + environment
+				+ name.substring(position);
+		URL resource = DefaultEnvironment.class.getResource(localName);
+		if (resource != null) {
+			return resource;
+		}
+		return DefaultEnvironment.class.getResource(name);
 	}
 
 }
