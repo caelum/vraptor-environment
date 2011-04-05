@@ -67,6 +67,20 @@ O 'environment.controller' é uma chave reservada. Caso esteja setado como 'true
 		
 		Enviando e-mail para: <env:get key='email_de_teste'/>
 		
+# acessando arquivos de configuração de acordo com o environment
+
+Se você precisa acessar um arquivo de configuração diferente para suas bibliotecas,
+de acordo com seu ambiente, você também pode utilizar o vraptor-environemnt.
+Basta colocar, por exemplo, seu hibernate.cfg.xml em diretórios com o nome
+de seus ambientes: *development* e *production* (por exemplo).
+Environment.getResource retornará o resource de acordo com seu ambiente atual:
+
+	cfg = new AnnotationConfiguration();
+	cfg.configure(environment.getResource("/hibernate.cfg.xml"));
+
+Para manter compatibilidade com quem não utilizava o vraptor-environment, caso o arquivo não seja encontrado
+no diretório com o nome do ambiente, ele será carregado no diretório root (do classpath).
+
 # Ajuda
 
 Receba assistência dos desenvolvedores do vraptor e da comunidade na lista de emails do vraptor.

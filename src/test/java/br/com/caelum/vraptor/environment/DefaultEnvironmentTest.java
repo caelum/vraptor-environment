@@ -21,7 +21,7 @@ public class DefaultEnvironmentTest {
 		ServletContext context = mock(ServletContext.class);
 		DefaultEnvironment env = new DefaultEnvironment(context);
 		URL resource = env.getResource("/hibernate.cfg.xml");
-		assertThat(resource, is(equalTo(DefaultEnvironment.class.getResource("/hibernate.cfg.development.xml"))));
+		assertThat(resource, is(equalTo(DefaultEnvironment.class.getResource("/development/hibernate.cfg.xml"))));
 	}
 
 	

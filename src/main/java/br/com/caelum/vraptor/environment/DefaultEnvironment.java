@@ -62,10 +62,7 @@ public class DefaultEnvironment implements Environment {
 
 	@Override
 	public URL getResource(String name) {
-		int position = name.lastIndexOf('.');
-		String localName = name.substring(0, position) + "." + environment
-				+ name.substring(position);
-		URL resource = DefaultEnvironment.class.getResource(localName);
+		URL resource = DefaultEnvironment.class.getResource("/" + environment + name);
 		if (resource != null) {
 			return resource;
 		}

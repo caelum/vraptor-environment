@@ -67,6 +67,18 @@ The 'environment.controller' key is reserved. If it's set to true you will have 
 		
 		Sending mail to: <env:get key='test_mail'/>
 		
+# acessing configuration files per environment
+
+Suppose you need to access a hibernate.cfg.xml file according to your environment.
+Put your hibernate.cfg.xml files into the folders *development* and *production*.
+Now Environment.getResource will return the resource according to your current environment as in:
+
+	cfg = new AnnotationConfiguration();
+	cfg.configure(environment.getResource("/hibernate.cfg.xml"));
+	
+For backward compatibility, if the configuration file is not found in the environment configuration dir, it will be loaded
+from the root directory.
+		
 # help
 
 Get help from vraptor developers and the community at vraptor mailing list.
