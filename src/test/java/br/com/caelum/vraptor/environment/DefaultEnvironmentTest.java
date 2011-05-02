@@ -2,13 +2,14 @@ package br.com.caelum.vraptor.environment;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.NoSuchElementException;
 
 import javax.servlet.ServletContext;
 
@@ -42,7 +43,15 @@ public class DefaultEnvironmentTest {
 		DefaultEnvironment env = new DefaultEnvironment(context);
 		URL resource = env.getResource("/hibernate.cfg.xml");
 		assertThat(resource, is(equalTo(DefaultEnvironment.class.getResource("/hibernate.cfg.xml"))));
-		assertThat(env.get("env_name"), is(nullValue()));
+		assertFalse(env.has("env_name"));
+	}
+	
+	@Test(expected=NoSuchElementException.class)
+	public void shouldThrowExceptionIfKeyDoesNotExist() throws Exception {
+		ServletContext context = mock(ServletContext.class);
+		DefaultEnvironment env = new DefaultEnvironment(context);
+		
+		env.get("key_that_doesnt_exist");
 	}
 
 }

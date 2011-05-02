@@ -3,6 +3,7 @@ package br.com.caelum.vraptor.environment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -49,7 +50,7 @@ public class DefaultEnvironment implements Environment {
 	}
 
 	public boolean supports(String feature) {
-		return Boolean.parseBoolean(properties.getProperty(feature, "false"));
+		return Boolean.parseBoolean(get(feature));
 	}
 
 	public boolean has(String key) {
@@ -57,6 +58,9 @@ public class DefaultEnvironment implements Environment {
 	}
 
 	public String get(String key) {
+		if(!has(key)) {
+			throw new NoSuchElementException("Key " + key + " not found in environment " + environment);
+		}
 		return properties.getProperty(key);
 	}
 
