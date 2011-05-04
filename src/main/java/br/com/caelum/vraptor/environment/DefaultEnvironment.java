@@ -84,4 +84,9 @@ public class DefaultEnvironment implements Environment {
 		return DefaultEnvironment.class.getResource(name);
 	}
 
+	@Override
+	public String getName() {
+		return environment;
+	}
+
 }
