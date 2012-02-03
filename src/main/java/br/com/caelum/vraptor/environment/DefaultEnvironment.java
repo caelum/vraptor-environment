@@ -3,9 +3,13 @@ package br.com.caelum.vraptor.environment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.ioc.Component;
@@ -22,7 +26,9 @@ import br.com.caelum.vraptor.ioc.Component;
 @ApplicationScoped
 @Component
 public class DefaultEnvironment implements Environment {
-
+	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(DefaultEnvironment.class);
 	private final Properties properties;
 	private String environment;
 
@@ -39,11 +45,16 @@ public class DefaultEnvironment implements Environment {
 		String name = "/" + environment + ".properties";
 		InputStream stream = DefaultEnvironment.class.getResourceAsStream(name);
 		this.properties = new Properties();
-		this.properties.load(stream);
+		if (stream != null) {
+			this.properties.load(stream);
+		} else {
+			LOG.warn("Could not find the file " + name
+					+ " to load. If you ask for any property, null will be returned");
+		}
 	}
 
 	public boolean supports(String feature) {
-		return Boolean.parseBoolean(properties.getProperty(feature, "false"));
+		return Boolean.parseBoolean(get(feature));
 	}
 
 	public boolean has(String key) {
@@ -51,6 +62,9 @@ public class DefaultEnvironment implements Environment {
 	}
 
 	public String get(String key) {
+		if(!has(key)) {
+			throw new NoSuchElementException("Key " + key + " not found in environment " + environment);
+		}
 		return properties.getProperty(key);
 	}
 
@@ -66,11 +80,17 @@ public class DefaultEnvironment implements Environment {
 
 	@Override
 	public URL getResource(String name) {
-		URL resource = DefaultEnvironment.class.getResource("/" + environment + name);
+		URL resource = DefaultEnvironment.class.getResource("/" + environment
+				+ name);
 		if (resource != null) {
 			return resource;
 		}
 		return DefaultEnvironment.class.getResource(name);
+	}
+
+	@Override
+	public String getName() {
+		return environment;
 	}
 
 }

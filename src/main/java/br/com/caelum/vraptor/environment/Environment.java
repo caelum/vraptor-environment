@@ -11,6 +11,12 @@ import java.net.URL;
  */
 public interface Environment {
 
+	/**
+	 * Returns the environment name
+	 * 
+	 */
+	String getName();
+	
 	/** 
 	 * Checks if a key is present 
 	 * 
