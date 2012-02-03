@@ -15,28 +15,19 @@ import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.ioc.Component;
 
 /**
- * A default environment implementation which loads the environment file based
- * on the br.com.caelum.vraptor.environment property in the context init
- * parameter.
+ * A default environment based on a string.
  * 
  * @author Alexandre Atoji
  * @author Andrew Kurauchi
  * @author Guilherme Silveira
  */
-@ApplicationScoped
-@Component
 public class DefaultEnvironment implements Environment {
 	
 	private static final Logger LOG = LoggerFactory
 			.getLogger(DefaultEnvironment.class);
 	private final Properties properties;
 	private String environment;
-
-	public DefaultEnvironment(ServletContext context) throws IOException {
-		this(context
-				.getInitParameter("br.com.caelum.vraptor.environment"));
-	}
-
+	
 	public DefaultEnvironment(String environment) throws IOException {
 		if (environment == null || environment.equals("")) {
 			environment = "development";
