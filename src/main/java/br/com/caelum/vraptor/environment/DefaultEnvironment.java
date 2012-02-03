@@ -27,11 +27,15 @@ public class DefaultEnvironment implements Environment {
 	private String environment;
 
 	public DefaultEnvironment(ServletContext context) throws IOException {
-		this.environment = context
-				.getInitParameter("br.com.caelum.vraptor.environment");
+		this(context
+				.getInitParameter("br.com.caelum.vraptor.environment"));
+	}
+
+	public DefaultEnvironment(String environment) throws IOException {
 		if (environment == null || environment.equals("")) {
 			environment = "development";
 		}
+		this.environment = environment;
 		String name = "/" + environment + ".properties";
 		InputStream stream = DefaultEnvironment.class.getResourceAsStream(name);
 		this.properties = new Properties();
