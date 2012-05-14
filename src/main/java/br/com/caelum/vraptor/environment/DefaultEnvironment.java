@@ -1,87 +1,92 @@
 package br.com.caelum.vraptor.environment;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
-import javax.servlet.ServletContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import br.com.caelum.vraptor.ioc.ApplicationScoped;
-import br.com.caelum.vraptor.ioc.Component;
-
 /**
  * A default environment based on a string.
- * 
+ *
  * @author Alexandre Atoji
  * @author Andrew Kurauchi
  * @author Guilherme Silveira
  */
 public class DefaultEnvironment implements Environment {
-	
-	private static final Logger LOG = LoggerFactory
-			.getLogger(DefaultEnvironment.class);
-	private final Properties properties;
-	private String environment;
-	
-	public DefaultEnvironment(String environment) throws IOException {
-		if (environment == null || environment.equals("")) {
-			environment = "development";
-		}
-		this.environment = environment;
-		String name = "/" + environment + ".properties";
-		InputStream stream = DefaultEnvironment.class.getResourceAsStream(name);
-		this.properties = new Properties();
-		if (stream != null) {
-			this.properties.load(stream);
-		} else {
-			LOG.warn("Could not find the file " + name
-					+ " to load. If you ask for any property, null will be returned");
-		}
-	}
 
-	public boolean supports(String feature) {
-		return Boolean.parseBoolean(get(feature));
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultEnvironment.class);
+    private final Properties specificProperties;
+    private final Properties generalProperties;
+    private String environment;
 
-	public boolean has(String key) {
-		return properties.containsKey(key);
-	}
+    public DefaultEnvironment(String environment) throws IOException {
+        if (environment == null || environment.equals("")) {
+            environment = "development";
+        }
+        this.environment = environment;
 
-	public String get(String key) {
-		if(!has(key)) {
-			throw new NoSuchElementException("Key " + key + " not found in environment " + environment);
-		}
-		return properties.getProperty(key);
-	}
+        String name = "/" + environment + ".properties";
+        InputStream specificStream = DefaultEnvironment.class.getResourceAsStream(name);
+        InputStream generalStream = DefaultEnvironment.class.getResourceAsStream("/environment.properties");
 
-	@Override
-	public void set(String key, String value) {
-		properties.setProperty(key, value);
-	}
+        this.specificProperties = new Properties();
+        this.generalProperties = new Properties();
 
-	@Override
-	public Iterable<String> getKeys() {
-		return (Iterable<String>) properties.stringPropertyNames();
-	}
+        if (generalStream != null) {
+            this.generalProperties.load(generalStream);
 
-	@Override
-	public URL getResource(String name) {
-		URL resource = DefaultEnvironment.class.getResource("/" + environment
-				+ name);
-		if (resource != null) {
-			return resource;
-		}
-		return DefaultEnvironment.class.getResource(name);
-	}
+            if (specificStream != null) {
+                this.specificProperties.load(specificStream);
+                this.generalProperties.putAll(this.specificProperties);
+            }
 
-	@Override
-	public String getName() {
-		return environment;
-	}
+        } else {
+            LOG.warn("Could not find the file 'enviroment' to load. If you ask for any property, null will be returned");
+        }
+
+    }
+
+    public boolean supports(String feature) {
+        return Boolean.parseBoolean(get(feature));
+    }
+
+    public boolean has(String key) {
+        return generalProperties.containsKey(key);
+    }
+
+    public String get(String key) {
+        if(!has(key)) {
+            throw new NoSuchElementException("Key " + key + " not found in environment " + environment);
+        }
+        return generalProperties.getProperty(key);
+    }
+
+    @Override
+    public void set(String key, String value) {
+        specificProperties.setProperty(key, value);
+    }
+
+    @Override
+    public Iterable<String> getKeys() {
+        return (Iterable<String>) specificProperties.stringPropertyNames();
+    }
+
+    @Override
+    public URL getResource(String name) {
+        URL resource = DefaultEnvironment.class.getResource("/" + environment + name);
+        if (resource != null) {
+            return resource;
+        }
+        return DefaultEnvironment.class.getResource(name);
+    }
+
+    @Override
+    public String getName() {
+        return environment;
+    }
 
 }
