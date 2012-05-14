@@ -19,8 +19,7 @@ import java.util.Properties;
 public class DefaultEnvironment implements Environment {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultEnvironment.class);
-    private final Properties specificProperties;
-    private final Properties generalProperties;
+    private final Properties properties = new Properties();
     private String environment;
 
     public DefaultEnvironment(String environment) throws IOException {
@@ -29,25 +28,22 @@ public class DefaultEnvironment implements Environment {
         }
         this.environment = environment;
 
+        loadAndPut("environment");
+        loadAndPut(environment);
+    }
+
+    private void loadAndPut(String environment) throws IOException {
         String name = "/" + environment + ".properties";
-        InputStream specificStream = DefaultEnvironment.class.getResourceAsStream(name);
-        InputStream generalStream = DefaultEnvironment.class.getResourceAsStream("/environment.properties");
+        InputStream stream = DefaultEnvironment.class.getResourceAsStream(name);
 
-        this.specificProperties = new Properties();
-        this.generalProperties = new Properties();
+        Properties properties = new Properties();
 
-        if (generalStream != null) {
-            this.generalProperties.load(generalStream);
-
-            if (specificStream != null) {
-                this.specificProperties.load(specificStream);
-                this.generalProperties.putAll(this.specificProperties);
-            }
-
+        if (properties != null) {
+            properties.load(stream);
+            this.properties.putAll(properties);
         } else {
-            LOG.warn("Could not find the file 'enviroment' to load. If you ask for any property, null will be returned");
+            LOG.warn("Could not find the file '" + environment + ".properties' to load. If you ask for any property, null will be returned");
         }
-
     }
 
     public boolean supports(String feature) {
@@ -55,24 +51,24 @@ public class DefaultEnvironment implements Environment {
     }
 
     public boolean has(String key) {
-        return generalProperties.containsKey(key);
+        return properties.containsKey(key);
     }
 
     public String get(String key) {
         if(!has(key)) {
             throw new NoSuchElementException("Key " + key + " not found in environment " + environment);
         }
-        return generalProperties.getProperty(key);
+        return properties.getProperty(key);
     }
 
     @Override
     public void set(String key, String value) {
-        specificProperties.setProperty(key, value);
+        this.properties.setProperty(key, value);
     }
 
     @Override
     public Iterable<String> getKeys() {
-        return (Iterable<String>) specificProperties.stringPropertyNames();
+        return (Iterable<String>) this.properties.stringPropertyNames();
     }
 
     @Override
