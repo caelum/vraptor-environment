@@ -1,15 +1,8 @@
 package br.com.caelum.vraptor.environment;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.NoSuchElementException;
-import java.util.Properties;
 
 import javax.servlet.ServletContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.ioc.Component;
@@ -28,8 +21,15 @@ import br.com.caelum.vraptor.ioc.Component;
 public class ServletBasedEnvironment extends DefaultEnvironment {
 	
 	public ServletBasedEnvironment(ServletContext context) throws IOException {
-		super(context
-				.getInitParameter("br.com.caelum.vraptor.environment"));
+		super(env(context));
+	}
+
+	private static String env(ServletContext context) {
+		String contextEnv = context.getInitParameter("br.com.caelum.vraptor.environment");
+		if (contextEnv != null) {
+			return contextEnv;
+		}
+		return System.getenv("VRAPTOR_ENVIRONMENT");
 	}
 
 }

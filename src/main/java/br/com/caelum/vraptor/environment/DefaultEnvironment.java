@@ -26,13 +26,16 @@ public class DefaultEnvironment implements Environment {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(DefaultEnvironment.class);
 	private final Properties properties;
-	private String environment;
+	private final String environment;
 	
 	public DefaultEnvironment(String environment) throws IOException {
+		
+		
 		if (environment == null || environment.equals("")) {
 			environment = "development";
 		}
 		this.environment = environment;
+		LOG.info("Using vraptor environment " + environment);
 		String name = "/" + environment + ".properties";
 		InputStream stream = DefaultEnvironment.class.getResourceAsStream(name);
 		this.properties = new Properties();
@@ -44,14 +47,17 @@ public class DefaultEnvironment implements Environment {
 		}
 	}
 
+	@Override
 	public boolean supports(String feature) {
 		return Boolean.parseBoolean(get(feature));
 	}
 
+	@Override
 	public boolean has(String key) {
 		return properties.containsKey(key);
 	}
 
+	@Override
 	public String get(String key) {
 		if(!has(key)) {
 			throw new NoSuchElementException("Key " + key + " not found in environment " + environment);
@@ -66,7 +72,7 @@ public class DefaultEnvironment implements Environment {
 
 	@Override
 	public Iterable<String> getKeys() {
-		return (Iterable<String>) properties.stringPropertyNames();
+		return properties.stringPropertyNames();
 	}
 
 	@Override
