@@ -15,7 +15,7 @@ import javax.servlet.ServletContext;
 
 import org.junit.Test;
 
-public class DefaultEnvironmentTest {
+public class ServletBasedEnvironmentTest {
 	
 	@Test
 	public void shouldUseTheCurrentEnvironmentFileIfFound() throws IOException {
@@ -24,7 +24,6 @@ public class DefaultEnvironmentTest {
 		URL resource = env.getResource("/hibernate.cfg.xml");
 		assertThat(resource, is(equalTo(DefaultEnvironment.class.getResource("/development/hibernate.cfg.xml"))));
 	}
-
 	
 	@Test
 	public void shouldUseTheDefaultFileIfEnvironmentIsNotFound() throws IOException {
