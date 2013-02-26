@@ -35,7 +35,7 @@ public interface Environment {
 	String get(String string);
 	
 	/**
-	 * Returns a key or a default value if the value is'nt set
+	 * Returns a key or a default value if the value isn't set
 	 */
 	String get(String string, String defaultValue);
 	
