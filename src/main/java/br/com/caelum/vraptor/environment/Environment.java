@@ -35,6 +35,11 @@ public interface Environment {
 	String get(String string);
 	
 	/**
+	 * Returns a key or a default value if the value is'nt set
+	 */
+	String get(String string, String defaultValue);
+	
+	/**
 	 * Sets a key in memory. This will *not* affect any configuration file.
 	 * @param key
 	 * @param value

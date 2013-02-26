@@ -6,13 +6,8 @@ import java.net.URL;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
-import javax.servlet.ServletContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import br.com.caelum.vraptor.ioc.ApplicationScoped;
-import br.com.caelum.vraptor.ioc.Component;
 
 /**
  * A default environment based on a string.
@@ -29,8 +24,6 @@ public class DefaultEnvironment implements Environment {
 	private final String environment;
 	
 	public DefaultEnvironment(String environment) throws IOException {
-		
-		
 		if (environment == null || environment.equals("")) {
 			environment = "development";
 		}
@@ -64,6 +57,14 @@ public class DefaultEnvironment implements Environment {
 		}
 		return properties.getProperty(key);
 	}
+	
+	@Override
+	public String get(String key, String defaultValue) {
+	    if (has(key)) {
+	        return get(key);
+	    }
+	    return defaultValue;
+	}
 
 	@Override
 	public void set(String key, String value) {
@@ -89,5 +90,6 @@ public class DefaultEnvironment implements Environment {
 	public String getName() {
 		return environment;
 	}
+
 
 }
