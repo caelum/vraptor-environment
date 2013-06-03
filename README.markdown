@@ -5,12 +5,12 @@ A simple vraptor plugin that adds an environment dependent configuration file.
 
 # installing
 
-Vraptor-environment.jar can be downloaded from maven's repository, or configured in any compatible tool:
+vraptor-environment.jar can be downloaded from maven's repository, or configured in any compatible tool (check the newest version at http://search.maven.org/):
 
 		<dependency>
 			<groupId>br.com.caelum.vraptor</groupId>
 			<artifactId>vraptor-environment</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.4</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -34,6 +34,8 @@ Your environment_name.properties should be located at src/main/resources. Exampl
 		environment.controller = true
 
 The 'environment.controller' key is reserved. If it's set to true you will have access to /admin/environment where you can view and edit your configurations.
+
+If can also define default values in a environment.properties file. Values defined there will be overriden in your specific environment properties file.
 
 # accessing environment properties on java code
 
