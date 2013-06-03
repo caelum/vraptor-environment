@@ -1,5 +1,5 @@
 ## vraptor-environment
-![Build status](https://secure.travis-ci.org/caelum/vraptor-environment.png)
+![Build status](https://api.travis-ci.org/caelum/vraptor-environment.png)
 
 A simple vraptor plugin that adds an environment dependent configuration file.
 
