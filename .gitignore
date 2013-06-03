@@ -2,3 +2,6 @@ target
 *.class
 .classpath
 .project
+*.iml
+*.ipr
+*.iws

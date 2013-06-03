@@ -42,7 +42,7 @@ public class ServletBasedEnvironmentTest {
 		ServletBasedEnvironment env = new ServletBasedEnvironment(context);
 		URL resource = env.getResource("/hibernate.cfg.xml");
 		assertThat(resource, is(equalTo(DefaultEnvironment.class.getResource("/hibernate.cfg.xml"))));
-		assertFalse(env.has("env_name"));
+		assertFalse(env.has("unexistant_key"));
 	}
 	
 	@Test(expected=NoSuchElementException.class)

@@ -11,36 +11,41 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A default environment based on a string.
- * 
+ *
  * @author Alexandre Atoji
  * @author Andrew Kurauchi
  * @author Guilherme Silveira
  */
 public class DefaultEnvironment implements Environment {
 	
-	private static final Logger LOG = LoggerFactory
-			.getLogger(DefaultEnvironment.class);
-	private final Properties properties;
-	private final String environment;
-	
-	public DefaultEnvironment(String environment) throws IOException {
-		if (environment == null || environment.equals("")) {
-			environment = "development";
-		}
-		this.environment = environment;
-		LOG.info("Using vraptor environment " + environment);
-		String name = "/" + environment + ".properties";
-		InputStream stream = DefaultEnvironment.class.getResourceAsStream(name);
-		this.properties = new Properties();
-		if (stream != null) {
-			this.properties.load(stream);
-		} else {
-			LOG.warn("Could not find the file " + name
-					+ " to load. If you ask for any property, null will be returned");
-		}
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultEnvironment.class);
+    private final Properties properties = new Properties();
+    private String environment;
 
-	@Override
+    public DefaultEnvironment(String environment) throws IOException {
+        if (environment == null || environment.equals("")) {
+            environment = "development";
+        }
+        this.environment = environment;
+
+        loadAndPut("environment");
+        loadAndPut(environment);
+    }
+
+    private void loadAndPut(String environment) throws IOException {
+        String name = "/" + environment + ".properties";
+        InputStream stream = DefaultEnvironment.class.getResourceAsStream(name);
+        Properties properties = new Properties();
+
+        if (stream != null) {
+            properties.load(stream);
+            this.properties.putAll(properties);
+        } else {
+            LOG.warn("Could not find the file '" + environment + ".properties' to load. If you ask for any property, null will be returned");
+        }
+    }
+    
+    @Override
 	public boolean supports(String feature) {
 		return Boolean.parseBoolean(get(feature));
 	}
@@ -57,7 +62,7 @@ public class DefaultEnvironment implements Environment {
 		}
 		return properties.getProperty(key);
 	}
-	
+
 	@Override
 	public String get(String key, String defaultValue) {
 	    if (has(key)) {
@@ -90,6 +95,5 @@ public class DefaultEnvironment implements Environment {
 	public String getName() {
 		return environment;
 	}
-
 
 }
