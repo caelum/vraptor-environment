@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
+import javax.enterprise.inject.Vetoed;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
  * @author Andrew Kurauchi
  * @author Guilherme Silveira
  */
+@Vetoed
 public class DefaultEnvironment implements Environment {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultEnvironment.class);
