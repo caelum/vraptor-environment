@@ -1,40 +1,36 @@
 package br.com.caelum.vraptor.environment;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.caelum.vraptor.InterceptionException;
-import br.com.caelum.vraptor.Intercepts;
-import br.com.caelum.vraptor.core.InterceptorStack;
-import br.com.caelum.vraptor.interceptor.Interceptor;
-import br.com.caelum.vraptor.resource.ResourceMethod;
+import br.com.caelum.vraptor4.BeforeCall;
+import br.com.caelum.vraptor4.Intercepts;
 
 /**
  * This interceptor inserts a environment variable in all requests
- * 
+ *
  * @author Alexandre Atoji
  *
  */
 
 @Intercepts
-public class EnvironmentInterceptor implements Interceptor {
+public class EnvironmentInterceptor {
 
-	private final Environment environment;
-	private final HttpServletRequest request;
+	private Environment environment;
+	private HttpServletRequest request;
 
+	@Deprecated // CDI eyes only
+	public EnvironmentInterceptor() {}
+
+	@Inject
 	public EnvironmentInterceptor(HttpServletRequest request, Environment environment) {
 		this.request = request;
 		this.environment = environment;
 	}
-	
-	@Override
-	public boolean accepts(ResourceMethod arg0) {
-		return true;
-	}
 
-	@Override
-	public void intercept(InterceptorStack stack, ResourceMethod method, Object instance) throws InterceptionException {
+	@BeforeCall
+	public void intercept() {
 		request.setAttribute("environment", environment);
-		stack.next(method, instance);
 	}
 
 }

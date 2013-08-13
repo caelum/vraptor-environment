@@ -2,27 +2,33 @@ package br.com.caelum.vraptor.environment;
 
 import java.io.IOException;
 
-import br.com.caelum.vraptor.Get;
-import br.com.caelum.vraptor.Path;
-import br.com.caelum.vraptor.Put;
-import br.com.caelum.vraptor.Resource;
-import br.com.caelum.vraptor.Result;
+import javax.inject.Inject;
+
 import br.com.caelum.vraptor.freemarker.Freemarker;
+import br.com.caelum.vraptor4.Controller;
+import br.com.caelum.vraptor4.Get;
+import br.com.caelum.vraptor4.Path;
+import br.com.caelum.vraptor4.Put;
+import br.com.caelum.vraptor4.Result;
 import freemarker.template.TemplateException;
 
-@Resource
+@Controller
 public class EnvironmentController {
 
-	private final Result result;
-	private final Environment environment;
-	private final Freemarker freemarker;
+	private Result result;
+	private Environment environment;
+	private Freemarker freemarker;
 
+	@Deprecated// CDI eyes only
+	public EnvironmentController() {}
+
+	@Inject
 	public EnvironmentController(Environment environment, Result result, Freemarker freemarker) {
 		this.environment = environment;
 		this.result = result;
 		this.freemarker = freemarker;
 	}
-	
+
 	@Path("/admin/environment")
 	@Get
 	public void list() throws IOException, TemplateException {
@@ -32,7 +38,7 @@ public class EnvironmentController {
 		}
 		freemarker.use("list").with("environment", environment).render();
 	}
-	
+
 	private boolean isDisabled() {
 		return !environment.supports("environment.controller");
 	}
