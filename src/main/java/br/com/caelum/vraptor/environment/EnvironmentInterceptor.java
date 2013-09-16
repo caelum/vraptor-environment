@@ -3,8 +3,8 @@ package br.com.caelum.vraptor.environment;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.caelum.vraptor4.BeforeCall;
-import br.com.caelum.vraptor4.Intercepts;
+import br.com.caelum.vraptor.BeforeCall;
+import br.com.caelum.vraptor.Intercepts;
 
 /**
  * This interceptor inserts a environment variable in all requests

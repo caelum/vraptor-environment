@@ -2,10 +2,9 @@ package br.com.caelum.vraptor.environment;
 
 import java.io.IOException;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
-
-import br.com.caelum.vraptor4.ioc.ApplicationScoped;
 
 /**
  * A default environment implementation which loads the environment file based
