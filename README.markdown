@@ -85,3 +85,8 @@ from the root directory.
 # help
 
 Get help from vraptor developers and the community at vraptor mailing list.
+
+
+# configure env name
+
+set a global system variable named VRAPTOR_ENVIRONMENT
