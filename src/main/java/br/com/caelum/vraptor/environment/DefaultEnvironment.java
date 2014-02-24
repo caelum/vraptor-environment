@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
+import javax.enterprise.inject.Vetoed;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,11 +18,15 @@ import org.slf4j.LoggerFactory;
  * @author Andrew Kurauchi
  * @author Guilherme Silveira
  */
+@Vetoed
 public class DefaultEnvironment implements Environment {
-	
+
     private static final Logger LOG = LoggerFactory.getLogger(DefaultEnvironment.class);
     private final Properties properties = new Properties();
     private String environment;
+
+    @Deprecated// CDI eyes only
+	public DefaultEnvironment() {}
 
     public DefaultEnvironment(String environment) throws IOException {
         if (environment == null || environment.equals("")) {
@@ -44,7 +50,7 @@ public class DefaultEnvironment implements Environment {
             LOG.warn("Could not find the file '" + environment + ".properties' to load. If you ask for any property, null will be returned");
         }
     }
-    
+
     @Override
 	public boolean supports(String feature) {
 		return Boolean.parseBoolean(get(feature));
