@@ -1,6 +1,11 @@
 ## vraptor-environment
 ![Build status](https://api.travis-ci.org/caelum/vraptor-environment.png)
 
+### this plugin is deprecated and should be used for only in vraptor 3.x versions
+
+Since vraptor 4.0.0, environment is implemented inside of the framework.
+
+
 A simple vraptor plugin that adds an environment dependent configuration file.
 
 # installing
