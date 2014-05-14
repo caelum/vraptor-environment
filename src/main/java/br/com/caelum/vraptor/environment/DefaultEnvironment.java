@@ -41,7 +41,7 @@ public class DefaultEnvironment implements Environment {
             properties.load(stream);
             this.properties.putAll(properties);
         } else {
-            LOG.warn("Could not find the file '" + environment + ".properties' to load.");
+            LOG.warn("Could not find the file '{}.properties' to load.", environment);
         }
     }
     
